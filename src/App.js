@@ -1,9 +1,10 @@
 import axios from "axios";
 import './App.css';
 import {useEffect,useState} from 'react';
-import { Container } from "@material-ui/core";
+import { Container, Switch, withStyles } from "@material-ui/core";
 import Header from "./components/Header/Header";
 import Definitions from "./components/Definitions/Definitions";
+import { grey } from "@material-ui/core/colors";
 // import categories from "./data/Category";
 function App() {
 
@@ -13,6 +14,25 @@ function App() {
 
   const [category, setCategory] = useState('en');
 
+  const [lightMode, setLightMode] = useState(false);
+
+
+  //adding Switch-Theme button 
+  const DarkMode = withStyles({
+    switchBase: {
+      color: grey[300],
+      '&$checked': {
+        color: grey[500],
+      },
+      '&$checked + $track': {
+        backgroundColor: grey[500],
+      },
+    },
+    checked: {},
+    track: {},
+  })(Switch);
+
+  // get data from an API using aync await
   const distApi = async() => {
     try{
       const data =await axios.get(
@@ -31,16 +51,24 @@ function App() {
   },[word,category]);
   
   return (
-    <div className="App" style={{height:'100vh', backgroundColor:'#282c34',color:'white'}}>
+    <div className="App" style={{height:'100vh', backgroundColor:lightMode?'#fff':'#282c34',color:lightMode?'black':'white',transition:"all 0.5s linear " }}>
       {/* <h1>saibaba</h1> */}
-      <Container maxWidth="md" style={{display:'flex',flexDirection:'column',height:'100vh'}}>
+      <Container maxWidth="md" style={{display:'flex',flexDirection:'column',height:'100vh',justifyContent:"space-evenly"}}>
+
+        <div style={{position:"absolute",top:0,right:15,paddingTop:10}}>
+          <span>{lightMode ? "Dark": "Light"} Mode</span>
+           <DarkMode checked={lightMode} onChange={()=>setLightMode(!lightMode)}/>
+        </div>
+
       <Header 
         category={category}
         setCategory={setCategory}
         word={word}
         setWord={setWord}
+        lightMode={lightMode}
       />
-      {meanings && (<Definitions word={word} meanings={meanings} category={category}/>)}
+      {meanings && (<Definitions word={word} meanings={meanings} category={category} lightMode={lightMode}
+/>)}
       </Container>      
     </div>
   );

@@ -9,13 +9,13 @@ import "./Header.css";
 import categories from "../../data/category";
 
 
-const Header = ({ category, setCategory, word, setWord }) => {
+const Header = ({ category, setCategory, word, setWord, lightMode }) => {
   const darkTheme = createTheme({
     palette: {
       primary: {
-        main: "#fff",
+        main: lightMode? "#000":"#fff",
       },
-      type: "dark",
+      type: lightMode?"light":"dark",
     },
   });
 
